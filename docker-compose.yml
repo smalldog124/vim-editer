@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  shop-service:
+    container_name: shop-service
+    image: api-web-service:latest 
+    build: 
+      context: .
+    ports:
+    - "3000:3000"
+    depends_on: 
+    - mongo
+    volumes: 
+    - ./config/default.yml:/app/config/default.yml
+    - ./logs:/app/logs
+    
+  mongo:
+    container_name: mongo-db
+    image: mongo:3.2.10
+    ports: 
+    - 28102:27017
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    ports: 
+    - 6072:5672
+    - 15672:15672
