@@ -1,0 +1,46 @@
+{
+    "consumer": {
+        "name": "Timeline Service"
+    },
+    "provider": {
+        "name": "Data Lake"
+    },
+    "interactions": [{
+        "description": "get transection withdrawal",
+        "request": {
+            "method": "GET",
+            "path": "/datalake-access/service/v1/timeline",
+            "query": "customer_id=16&last_index=20"
+        },
+        "response": {
+            "status": 200,
+            "headers": {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            "body": {
+                "has_more": true,
+                "last_index": "20",
+                "transactions": [{
+                    "transaction_customer_id": "16",
+                    "transaction_id": "3364-2020-05-26-23-45-26-90004965969-260",
+                    "transaction_amount": 2100.00,
+                    "transaction_datetime": "20191018 08:20",
+                    "transaction_direction": "withdraw",
+                    "transaction_type": "withdraw",
+                    "transaction_fee_amount": 0,
+                    "from_ending_balance": 5000
+                }]
+            },
+            "matchingRules": {
+                "$.body.*": {
+                    "match": "type"
+                }
+            }
+        }
+    }],
+    "metadata": {
+        "pactSpecification": {
+            "version": "2.0.0"
+        }
+    }
+}
