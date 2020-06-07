@@ -96,3 +96,6 @@ Shift+zz : บันทึกและออกจาก editor
 :q : ออกจาก editor โดยไม่มีการบันทึก
 
 :wq : บันทึกและออกจาก editor
+
+---
+reference [https://vim.rtorr.com/lang/th](https://vim.rtorr.com/lang/th)
