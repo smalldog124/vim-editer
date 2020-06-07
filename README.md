@@ -75,6 +75,7 @@ x : ลบตัวหนังสือที่ cursor อยู่
 R : แก้ไขข้อความโดยทับไปเลย
 
 s : ลบตัวหนังสือตัวที่ cursor อยู่ พร้อมเข้า Insert mode
+:/key-word : ค้นหาคำตาม key-word ในไฟล์
 
 ### Moving within a file
 ย้าย cursor อยู่ในไฟล์สามารถใช้
