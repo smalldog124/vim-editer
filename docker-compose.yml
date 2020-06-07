@@ -1,28 +1,74 @@
 version: "3.5"
 
 services:
-  shop-service:
-    container_name: shop-service
-    image: api-web-service:latest 
-    build: 
-      context: .
+  store-service:
+    image: sckseal/toy-store-service:0.0.2
+    container_name: store-service
+    build:
+      context: store-service
     ports:
-    - "3000:3000"
-    depends_on: 
-    - mongo
-    volumes: 
-    - ./config/default.yml:/app/config/default.yml
-    - ./logs:/app/logs
+      - "8000:8000"
+    depends_on:
+      - store-database
+    restart: always
+    environment: 
+      - TEST_MODE=true
+      - CACHE_ON=true
     
-  mongo:
-    container_name: mongo-db
-    image: mongo:3.2.10
+  store-cache:
+    image: redis:latest
+    container_name: store-cache
     ports: 
-    - 28102:27017
+    - "6379:6379"
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:management
-    ports: 
-    - 6072:5672
-    - 15672:15672
+  store-database:
+    image: mysql:5.7
+    container_name: store-database
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=sealteam
+      - MYSQL_PASSWORD=sckshuhari
+      - MYSQL_DATABASE=toy
+    volumes:
+      - ./tearup/:/docker-entrypoint-initdb.d/
+    ports:
+      - "3306:3306"
+
+  store-web:
+    image: sckseal/toy-store-web:0.0.1
+    container_name: store-web
+    build:
+      context: store-web
+    ports:
+      - "3000:3000"
+
+  store-nginx:
+    image: sckseal/toy-store-nginx:0.0.1
+    container_name: store-nginx
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    depends_on:
+      - store-service
+      - store-web
+    ports:
+      - "80:80"
+
+  bank-gateway:
+    image: sckseal/toy-store-bankgateway:0.0.1
+    build: 
+      context: thirdparty/bank-gateway
+    container_name: bank-gateway
+    restart: always
+    ports:
+      - "8882:8882"
+
+  shipping-gateway:
+    image: sckseal/toy-store-shippinggateway:0.0.1
+    build:
+      context: thirdparty/shipping-gateway
+    container_name: shipping-gateway
+    restart: always
+    ports:
+      - "8883:8882"
